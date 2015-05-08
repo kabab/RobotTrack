@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/javascripts/jquery.js"></script>
+  <title>MAP</title>
+</head>
+<body>
+  <canvas id="can"></canvas>
+
+  <script>
+    var can = document.getElementById('can');
+
+    $.get('/data', function(data) {
+
+      var A = -80, n = 3, l = 2, L = 3;
+      var f = 200;
+      can.width = l * f ;
+      can.height = L * f;
+
+      if(Object.keys(data).length < 2) {
+        alert("No enough data to calculate location");
+      }
+
+      var i = 0;
+      var d = [];
+
+      for(var prop in data) {
+        d[i] = data[prop];
+        i++;
+      }
+
+      // d1 = Math.pow(10, (A - d[0])/ (10 * n));
+      // d2 = Math.pow(10, (A - d[1])/ (10 * n));
+
+      d1 = 1.41;
+      d2 = 1.41;
+      var x, y;
+      var k = (d1 * d1 + l * l - d2 * d2) / (2 * l * d1);
+
+      i = Math.acos(k);
+      x = Math.cos(i) * d1;
+      y = L - Math.sin(i) * d2;
+
+      var ctx = can.getContext('2d');
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, can.width, can.height);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(x * f, L * f - y * f, 10, 10);
+
+    });
+  </script>
+</body>
+</html>
